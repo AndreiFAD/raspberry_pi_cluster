@@ -321,7 +321,37 @@ echo
 echo "jupyter installed kernels and extensions"
 sudo jupyter kernelspec list
 sudo jupyter labextension list
-echo "Jupiter config file - sudo nano /home/pi/.jupyter/jupyter_notebook_config.py"
-echo "Jupiter notebook password - sudo jupyter notebook password"
-echo "sudo nano /home/pi/.local/share/jupyter/kernels/ir/kernel.json"
-echo "You can start with this command - sudo jupyter notebook --allow-root"
+
+host=$(hostname)
+if [ "$host" = "$hostAddress" ]; then
+
+    hdfs namenode -format -force
+
+    start-dfs.sh
+    start-yarn.sh
+    cd /opt/spark 
+    ./sbin/start-all.sh
+
+    hdfs dfsadmin -safemode leave
+
+    hdfs dfs -mkdir -p /user/hive/warehouse
+    hdfs dfs -chmod g+w /user/hive/warehouse
+    hdfs dfs -mkdir -p /tmp
+    hdfs dfs -chmod g+w /tmp
+    hdfs dfs -chmod -R 755 /tmp
+
+    echo "hive metastore start"
+    /opt/hive/bin/hive --service metastore > /dev/null 2>&1 &
+    echo "hive hiveserver2 start"
+    /opt/hive/bin/hive --service hiveserver2 > /dev/null 2>&1 &
+
+
+    echo "Jupiter config file - sudo nano /home/pi/.jupyter/jupyter_notebook_config.py"
+    echo "Jupiter notebook password - sudo jupyter notebook password"
+    echo "sudo nano /home/pi/.local/share/jupyter/kernels/ir/kernel.json"
+    echo "You can start with this command - sudo jupyter notebook --allow-root"
+
+else
+    printf '%s\n' "uh-oh, not on the master host"
+fi
+
