@@ -345,13 +345,15 @@ if [ "$host" = "$hostAddress" ]; then
     echo "hive hiveserver2 start"
     /opt/hive/bin/hive --service hiveserver2 > /dev/null 2>&1 &
 
-
+    echo "http://master:8088/"
+    echo "http://master:9870/"
+    echo "http://master:8080/"
+    echo "http://master:10002/"
+    echo "http://master:8888/lab"
     echo "Jupiter config file - sudo nano /home/pi/.jupyter/jupyter_notebook_config.py"
     echo "Jupiter notebook password - sudo jupyter notebook password"
-    echo "sudo nano /home/pi/.local/share/jupyter/kernels/ir/kernel.json"
-    echo "You can start with this command - sudo jupyter notebook --allow-root"
+    echo "You can start with this command - sudo jupyter notebook --allow-root --ip 0.0.0.0 --no-browser"
 
 else
     printf '%s\n' "uh-oh, not on the master host"
 fi
-
