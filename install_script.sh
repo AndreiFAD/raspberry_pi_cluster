@@ -300,6 +300,59 @@ if [ "$host" = "$hostAddress" ]; then
 
 else
     printf '%s\n' "uh-oh, not on the master host"
+
+    sudo rm /opt/hive/lib/guava-19.0.jar
+    sudo cp /opt/hadoop/share/hadoop/common/lib/guava-27.0-jre.jar /opt/hive/lib/
+    cp /opt/hive/conf/hive-env.sh.template  /opt/hive/conf/hive-env.sh
+    cd /opt/hive/lib/
+    sudo wget https://jdbc.postgresql.org/download/postgresql-42.2.24.jar
+
+    sudo mv /opt/hive/conf/hivemetastore-site.xml /opt/hive/conf/hivemetastore-site.xmlbak
+    sudo mv /opt/hive/conf/hiveserver2-site.xml /opt/hive/conf/hiveserver2-site.xmlbak
+    sudo mv /opt/hive/conf/hive-env.sh /opt/hive/conf/hive-env.shbak
+
+    cd
+    cd /opt/hive/conf/
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/hivemetastore-site.xml
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/hive-env.sh
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/hiveserver2-site.xml
+
+    sudo touch /opt/spark/conf/slaves
+    sudo sh -c "echo 'worker1' >> /opt/spark/conf/slaves"
+    sudo sh -c "echo 'worker2' >> /opt/spark/conf/slaves"
+    sudo sh -c "echo 'worker3' >> /opt/spark/conf/slaves"
+
+    sudo touch /opt/hadoop/etc/hadoop/workers
+    sudo sh -c "echo 'worker1' >> /opt/hadoop/etc/hadoop/workers"
+    sudo sh -c "echo 'worker2' >> /opt/hadoop/etc/hadoop/workers"
+    sudo sh -c "echo 'worker3' >> /opt/hadoop/etc/hadoop/workers"
+    
+    
+    sudo mv /opt/hadoop/etc/hadoop/capacity-scheduler.xml /opt/hadoop/etc/hadoop/capacity-scheduler.xmlbak
+    sudo mv /opt/hadoop/etc/hadoop/core-site.xml /opt/hadoop/etc/hadoop/core-site.xmlbak
+    sudo mv /opt/hadoop/etc/hadoop/hadoop-env.sh /opt/hadoop/etc/hadoop/hadoop-env.shbak
+    sudo mv /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/hadoop/etc/hadoop/hdfs-site.xmlbak
+    sudo mv /opt/hadoop/etc/hadoop/mapred-site.xml /opt/hadoop/etc/hadoop/mapred-site.xmlbak
+    sudo mv /opt/hadoop/etc/hadoop/yarn-site.xml /opt/hadoop/etc/hadoop/yarn-site.xmlbak
+
+    cd
+    cd /opt/hadoop/etc/
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/capacity-scheduler.xml
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/core-site.xml
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/hdfs-site.xml
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/mapred-site.xml
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/yarn-site.xml
+    
+    cd
+    cd /opt/spark/conf/
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/spark-defaults.conf
+
+    sudo sh -c "echo 'export HADOOP_HOME=/opt/hadoop' >> /opt/spark/conf/spark-env.sh"
+    sudo sh -c "echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> /opt/spark/conf/spark-env.sh"
+
+    sudo sh -c "echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-armhf' >> /opt/hadoop/etc/hadoop/hadoop-env.sh"
+
+
 fi
 
 sudo htpdate -a -l www.pool.ntp.org
@@ -357,3 +410,5 @@ if [ "$host" = "$hostAddress" ]; then
 else
     printf '%s\n' "uh-oh, not on the master host"
 fi
+
+
