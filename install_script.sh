@@ -42,7 +42,7 @@ sudo pip3 install numpy pandas ipython pillow jupyter jupyterlab plotly ipywidge
 sudo apt -y install python3-matplotlib python3-scipy
 sudo apt -y install ipython3
 sudo apt -y install python3-sklearn python3-sklearn-lib python3-sklearn-doc
-sudo apt -y install python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
+sudo apt -y install python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose py4j
 
 
 # hadoop and spark
@@ -79,6 +79,7 @@ cd $home
 sudo mkdir -p notebooks
 
 #  spylon kernel scala
+sudo apt -y install scala
 sudo pip3 install spylon-kernel
 sudo python3 -m spylon_kernel install --user
 
@@ -136,7 +137,7 @@ sudo Rscript -e 'install.packages("ggplot2", repo = "https://lib.ugent.be/CRAN/"
 sudo Rscript -e 'install.packages("tidyr", repo = "https://lib.ugent.be/CRAN/")'
 sudo Rscript -e 'install.packages("shiny", repo = "https://lib.ugent.be/CRAN/")'
 sudo Rscript -e 'install.packages("caret", repo = "https://lib.ugent.be/CRAN/")'
-sudo Rscript -e 'install.packages("E1071", repo = "https://lib.ugent.be/CRAN/")'
+sudo Rscript -e 'install.packages("e1071", repo = "https://lib.ugent.be/CRAN/")'
 sudo Rscript -e 'install.packages("plotly", repo = "https://lib.ugent.be/CRAN/")'
 sudo Rscript -e 'install.packages("tidyquant", repo = "https://lib.ugent.be/CRAN/")'
 sudo Rscript -e 'install.packages("repr", repo = "https://lib.ugent.be/CRAN/")'
@@ -410,5 +411,3 @@ if [ "$host" = "$hostAddress" ]; then
 else
     printf '%s\n' "uh-oh, not on the master host"
 fi
-
-
