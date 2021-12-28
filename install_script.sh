@@ -38,7 +38,7 @@ sudo apt -y install nodejs
 sudo python3 -m pip install --upgrade --force-reinstall pip
 sudo pip3 install -U pip
 sudo pip3 install --upgrade pip
-sudo pip3 install numpy pandas ipython pillow jupyter jupyterlab plotly ipywidgets jupyter-dash jupyterlab-dash bokeh dash findspark notebook
+sudo pip3 install numpy pandas ipython pillow jupyter jupyterlab plotly ipywidgets jupyter-dash jupyterlab-dash bokeh dash findspark notebook py4j
 sudo apt -y install python3-matplotlib python3-scipy
 sudo apt -y install ipython3
 sudo apt -y install python3-sklearn python3-sklearn-lib 
@@ -198,7 +198,7 @@ sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-armhf/jre/bin/ja
 sudo touch /opt/spark/conf/master
 sudo sh -c "echo 'master' >> /opt/spark/conf/master"
 
-#!/bin/bash
+
 echo '# HADOOP - SPARK - HIVE variables' >> ~/.bashrc
 echo 'export PYTHONHASHSEED=123' >>  ~/.bashrc
 echo 'export PYSPARK_PYTHON=/usr/bin/python3' >> ~/.bashrc
@@ -359,6 +359,8 @@ fi
 sudo htpdate -a -l www.pool.ntp.org
 echo "R:"
 R --version
+echo "Scala:"
+scala -version
 echo "Julia:"
 julia -v
 echo "java:"
