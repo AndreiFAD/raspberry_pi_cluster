@@ -41,8 +41,8 @@ sudo pip3 install --upgrade pip
 sudo pip3 install numpy pandas ipython pillow jupyter jupyterlab plotly ipywidgets jupyter-dash jupyterlab-dash bokeh dash findspark notebook
 sudo apt -y install python3-matplotlib python3-scipy
 sudo apt -y install ipython3
-sudo apt -y install python3-sklearn python3-sklearn-lib python3-sklearn-doc
-sudo apt -y install python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose py4j
+sudo apt -y install python3-sklearn python3-sklearn-lib 
+sudo apt -y install python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
 
 
 # hadoop and spark
@@ -379,26 +379,7 @@ sudo jupyter labextension list
 host=$(hostname)
 if [ "$host" = "$hostAddress" ]; then
 
-    hdfs namenode -format -force
-
-    start-dfs.sh
-    start-yarn.sh
-    cd /opt/spark 
-    ./sbin/start-all.sh
-
-    hdfs dfsadmin -safemode leave
-
-    hdfs dfs -mkdir -p /user/hive/warehouse
-    hdfs dfs -chmod g+w /user/hive/warehouse
-    hdfs dfs -mkdir -p /tmp
-    hdfs dfs -chmod g+w /tmp
-    hdfs dfs -chmod -R 755 /tmp
-
-    echo "hive metastore start"
-    /opt/hive/bin/hive --service metastore > /dev/null 2>&1 &
-    echo "hive hiveserver2 start"
-    /opt/hive/bin/hive --service hiveserver2 > /dev/null 2>&1 &
-
+   
     echo "http://master:8088/"
     echo "http://master:9870/"
     echo "http://master:8080/"
@@ -411,3 +392,4 @@ if [ "$host" = "$hostAddress" ]; then
 else
     printf '%s\n' "uh-oh, not on the master host"
 fi
+
