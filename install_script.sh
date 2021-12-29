@@ -277,13 +277,12 @@ if [ "$host" = "$hostAddress" ]; then
     
     sudo mv /opt/hadoop/etc/hadoop/capacity-scheduler.xml /opt/hadoop/etc/hadoop/capacity-scheduler.xmlbak
     sudo mv /opt/hadoop/etc/hadoop/core-site.xml /opt/hadoop/etc/hadoop/core-site.xmlbak
-    sudo mv /opt/hadoop/etc/hadoop/hadoop-env.sh /opt/hadoop/etc/hadoop/hadoop-env.shbak
     sudo mv /opt/hadoop/etc/hadoop/hdfs-site.xml /opt/hadoop/etc/hadoop/hdfs-site.xmlbak
     sudo mv /opt/hadoop/etc/hadoop/mapred-site.xml /opt/hadoop/etc/hadoop/mapred-site.xmlbak
     sudo mv /opt/hadoop/etc/hadoop/yarn-site.xml /opt/hadoop/etc/hadoop/yarn-site.xmlbak
 
     cd
-    cd /opt/hadoop/etc/
+    cd /opt/hadoop/etc/hadoop/
     sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/capacity-scheduler.xml
     sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/core-site.xml
     sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/hdfs-site.xml
@@ -392,3 +391,5 @@ if [ "$host" = "$hostAddress" ]; then
 else
     printf '%s\n' "uh-oh, not on the master host"
 fi
+
+
