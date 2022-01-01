@@ -2,13 +2,13 @@
 # ------------------------------------------------------------------
 # sudo nano install.sh
 # install:
-#	python libraries
+#	Python3 libraries
 #	Jupyter notebook and lab
-#	nodejs 12
-#	hadoop-3.2.1
-#	spark-2.4.5
-#	apache-hive-3.1.2 
-#     postgresql 10
+#	Nodejs 12
+#	Hadoop-3.2.1
+#	Spark-2.4.5
+#	Apache-hive-3.1.2 
+#     Postgresql 10
 # kernels:
 #	Scala kernel - run on cluster, master = yarn http://master:8088
 #	Python3 kernel - run on cluster, spark://master:7077
@@ -303,3 +303,4 @@ if [ "$host" = "$hostAddress" ]; then
 else
     printf '%s\n' "It is not the master host"
 fi
+
