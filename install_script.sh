@@ -18,6 +18,10 @@
 #	Bash kernel - local running
 # ------------------------------------------------------------------
 hostAddress="master"
+hostAddress1="worker1"
+hostAddress2="worker2"
+hostAddress3="worker3"
+host=$(hostname)
 
 sudo add-apt-repository universe
 sudo add-apt-repository multiverse
@@ -42,11 +46,14 @@ sudo apt -y install nodejs
 python3 -m pip install --upgrade --force-reinstall pip
 pip3 install -U pip
 pip3 install --upgrade pip
-pip3 install numpy pandas ipython pillow jupyter jupyterlab plotly ipywidgets jupyter-dash jupyterlab-dash bokeh dash findspark notebook py4j
+pip3 install numpy pandas ipython pillow jupyter jupyterlab plotly ipywidgets jupyter-dash jupyterlab-dash bokeh dash findspark notebook py4j pydoop
 sudo apt -y install python3-matplotlib python3-scipy
 sudo apt -y install ipython3
 sudo apt -y install python3-sklearn python3-sklearn-lib 
 sudo apt -y install python-numpy python-scipy python-matplotlib ipython python-pandas python-sympy python-nose
+sudo apt -y install libsasl2-dev gcc g++
+pip3 install sasl thrift PyHive pyhs2
+pip3 install thrift_sasl --user
 
 # hadoop and spark
 cd
@@ -64,6 +71,96 @@ wget  https://downloads.apache.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
 sudo tar -xvf apache-hive-3.1.2-bin.tar.gz
 sudo mv apache-hive-3.1.2-bin hive
 sudo mv hive /opt/
+
+# zookeeper
+cd
+wget https://downloads.apache.org/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz
+tar -xzvf apache-zookeeper-3.6.3-bin.tar.gz
+sudo mv apache-zookeeper-3.6.3-bin /opt/zookeeper
+cd
+cd /opt/
+sudo chown -R pi:pi zookeeper
+sudo mkdir /opt/zookeeper_data
+sudo chown -R pi:pi zookeeper_data
+
+sudo touch /opt/zookeeper/conf/zoo.conf 
+sudo sh -c "echo 'master' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo '# see zoo_sample.cfg_old for information about parameters' >> /opt/zookeeper/conf/zoo.conf"
+
+sudo sh -c "echo 'tickTime=2000' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'dataDir=/opt/zookeeper_data' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'clientPort=2181' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'initLimit=20' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'syncLimit=5' >> /opt/zookeeper/conf/zoo.conf"
+
+sudo sh -c "echo '# this parameters are for a zookeeper cluster (assemble)' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'server.1=worker1:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'server.2=worker2:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'server.3=worker3:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
+
+
+if [ "$host" = "$hostAddress1" ]; then
+    sudo touch /opt/zookeeper_data/myid
+    sudo sh -c "echo '1' >> /opt/zookeeper_data/myid"
+else
+    printf '%s\n' "It is not the worker1 host"
+fi
+
+if [ "$host" = "$hostAddress2" ]; then
+    sudo touch /opt/zookeeper_data/myid
+    sudo sh -c "echo '2' >> /opt/zookeeper_data/myid"
+else
+    printf '%s\n' "It is not the worker2 host"
+fi
+
+if [ "$host" = "$hostAddress3" ]; then
+    sudo touch /opt/zookeeper_data/myid
+    sudo sh -c "echo '3' >> /opt/zookeeper_data/myid"
+else
+    printf '%s\n' "It is not the worker3 host"
+fi
+
+
+# kafka
+cd
+wget https://archive.apache.org/dist/kafka/2.5.0/kafka_2.13-2.5.0.tgz
+tar -xzvf kafka_2.13-2.5.0.tgz
+sudo mv kafka_2.13-2.5.0 /opt/kafka
+cd
+cd /opt/
+sudo chown -R pi:pi kafka
+sudo mkdir /opt/kafka_data
+sudo chown -R pi:pi  /opt/kafka_data
+
+sudo mv /opt/kafka/config/server.properties /opt/kafka/config/server.propertiesbak
+
+
+if [ "$host" = "$hostAddress1" ]; then
+    cd
+    cd opt/kafka/config/
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/server.properties1
+    sudo mv server.properties1 /opt/kafka/config/server.properties
+else
+    printf '%s\n' "It is not the worker1 host"
+fi
+
+if [ "$host" = "$hostAddress2" ]; then
+    cd
+    cd opt/kafka/config/
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/server.properties2
+    sudo mv server.properties2 /opt/kafka/config/server.properties
+else
+    printf '%s\n' "It is not the worker2 host"
+fi
+
+if [ "$host" = "$hostAddress3" ]; then
+    cd
+    cd opt/kafka/config/
+    sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/server.properties3
+    sudo mv server.properties3 /opt/kafka/config/server.properties
+else
+    printf '%s\n' "It is not the worker3 host"
+fi
 
 cd
 sudo mkdir  /opt/hadoop_tmp
@@ -122,6 +219,7 @@ sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/
 
 cd
 sudo touch /opt/hadoop/etc/hadoop/workers
+sudo sed -i '1d' /opt/hadoop/etc/hadoop/workers
 echo 'master' >> /opt/hadoop/etc/hadoop/workers
 echo 'worker1' >> /opt/hadoop/etc/hadoop/workers
 echo 'worker2' >> /opt/hadoop/etc/hadoop/workers
@@ -146,7 +244,15 @@ echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64' >> /opt/hadoop/etc/had
 cd
 cd /opt/spark/conf/
 sudo wget https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/spark-defaults.conf
+
 sudo cp spark-env.sh.template spark-env.sh
+sudo sh -c "echo 'export SPARK_EXECUTOR_CORES=4' >> /opt/spark/conf/spark-env.sh"
+sudo sh -c "echo 'export SPARK_EXECUTOR_MEMORY=2500M' >> /opt/spark/conf/spark-env.sh"
+sudo sh -c "echo 'export SPARK_DRIVER_MEMORY=2500M' >> /opt/spark/conf/spark-env.sh"
+sudo sh -c "echo \"export SPARK_MASTER_HOST='master'\" >> /opt/spark/conf/spark-env.sh"
+sudo sh -c "echo 'export SPARK_WORKER_CORES=4' >> /opt/spark/conf/spark-env.sh"
+sudo sh -c "echo 'export SPARK_WORKER_MEMORY=2500M' >> /opt/spark/conf/spark-env.sh"
+
 sudo sh -c "echo 'export PYSPARK_PYTHON=/usr/bin/python3' >> /opt/spark/conf/spark-env.sh"
 sudo sh -c "echo \"export PYSPARK_DRIVER_PYTHON='jupyter'\" >> /opt/spark/conf/spark-env.sh"
 
@@ -161,8 +267,6 @@ echo 'worker2' >> /opt/spark/conf/slaves
 echo 'worker3' >> /opt/spark/conf/slaves
 
 
-
-host=$(hostname)
 if [ "$host" = "$hostAddress" ]; then
 
     # extra conf to jupyter
