@@ -90,7 +90,7 @@ sudo sh -c "echo '# see zoo_sample.cfg_old for information about parameters' >> 
 
 sudo sh -c "echo 'tickTime=2000' >> /opt/zookeeper/conf/zoo.cfg"
 sudo sh -c "echo 'dataDir=/opt/zookeeper_data' >> /opt/zookeeper/conf/zoo.cfg"
-sudo sh -c "echo 'clientPort=2181' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'clientPort=2189' >> /opt/zookeeper/conf/zoo.cfg"
 sudo sh -c "echo 'initLimit=20' >> /opt/zookeeper/conf/zoo.cfg"
 sudo sh -c "echo 'syncLimit=5' >> /opt/zookeeper/conf/zoo.cfg"
 
