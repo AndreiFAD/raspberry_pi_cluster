@@ -7,15 +7,17 @@
 #	Nodejs 12
 #	Hadoop-3.2.1
 #	Spark-2.4.5
+#      Zookeeper-3.6.3
+#      Kafka-2.13
 #	Apache-hive-3.1.2 
 #     Postgresql 10
 # kernels:
 #	Scala kernel - run on cluster, master = yarn http://master:8088
 #	Python3 kernel - run on cluster, spark://master:7077
-#	Sqlite3 kernel - local running, but the db files can create on hdfs
-#	R kernel - local running
-#	Julia kernel - local running
-#	Bash kernel - local running
+#	Sqlite3 kernel
+#	R kernel
+#	Julia kernel
+#	Bash kernel
 # ------------------------------------------------------------------
 hostAddress="master"
 hostAddress1="worker1"
@@ -31,7 +33,7 @@ sudo apt-get update
 sudo apt-get -y install python python3-dev python3-pip htpdate net-tools  build-essential libncursesw5-dev libgdbm-dev libc6-dev zlib1g-dev libsqlite3-dev tk-dev libssl-dev openssl libffi-dev libxpm-dev libxext-dev libbz2-dev libncurses5-dev libjpeg8 libjpeg62-dev libfreetype6 libfreetype6-dev curl dirmngr apt-transport-https lsb-release ca-certificates libcurl4-gnutls-dev libxml2-dev gcc g++ make
 
 # openjdk-8-jdk
-sudo apt install software-properties-common
+sudo apt -y install software-properties-common
 sudo add-apt-repository ppa:linuxuprising/java -y
 sudo apt-get -y install openjdk-8-jdk
 sudo update-java-alternatives --list
@@ -98,7 +100,6 @@ sudo sh -c "echo 'server.1=worker1:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
 sudo sh -c "echo 'server.2=worker2:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
 sudo sh -c "echo 'server.3=worker3:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
 
-
 if [ "$host" = "$hostAddress1" ]; then
     sudo touch /opt/zookeeper_data/myid
     sudo sh -c "echo '1' >> /opt/zookeeper_data/myid"
@@ -120,7 +121,6 @@ else
     printf '%s\n' "It is not the worker3 host"
 fi
 
-
 # kafka
 cd
 wget https://archive.apache.org/dist/kafka/2.5.0/kafka_2.13-2.5.0.tgz
@@ -133,7 +133,6 @@ sudo mkdir /opt/kafka_data
 sudo chown -R pi:pi  /opt/kafka_data
 
 sudo mv /opt/kafka/config/server.properties /opt/kafka/config/server.propertiesbak
-
 
 if [ "$host" = "$hostAddress1" ]; then
     cd
