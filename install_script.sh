@@ -85,20 +85,19 @@ sudo chown -R pi:pi zookeeper
 sudo mkdir /opt/zookeeper_data
 sudo chown -R pi:pi zookeeper_data
 
-sudo touch /opt/zookeeper/conf/zoo.conf 
-sudo sh -c "echo 'master' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo '# see zoo_sample.cfg_old for information about parameters' >> /opt/zookeeper/conf/zoo.conf"
+sudo touch /opt/zookeeper/conf/zoo.cfg
+sudo sh -c "echo '# see zoo_sample.cfg_old for information about parameters' >> /opt/zookeeper/conf/zoo.cfg"
 
-sudo sh -c "echo 'tickTime=2000' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'dataDir=/opt/zookeeper_data' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'clientPort=2181' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'initLimit=20' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'syncLimit=5' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo 'tickTime=2000' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'dataDir=/opt/zookeeper_data' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'clientPort=2181' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'initLimit=20' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'syncLimit=5' >> /opt/zookeeper/conf/zoo.cfg"
 
-sudo sh -c "echo '# this parameters are for a zookeeper cluster (assemble)' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'server.1=worker1:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'server.2=worker2:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
-sudo sh -c "echo 'server.3=worker3:2888:3888' >> /opt/zookeeper/conf/zoo.conf"
+sudo sh -c "echo '# this parameters are for a zookeeper cluster (assemble)' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'server.1=worker1:2888:3888' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'server.2=worker2:2888:3888' >> /opt/zookeeper/conf/zoo.cfg"
+sudo sh -c "echo 'server.3=worker3:2888:3888' >> /opt/zookeeper/conf/zoo.cfg"
 
 if [ "$host" = "$hostAddress1" ]; then
     sudo touch /opt/zookeeper_data/myid
@@ -171,12 +170,19 @@ sudo chown -R pi:pi /opt/hive
 sudo chown -R pi:pi /opt/hadoop
 sudo chown -R pi:pi /opt/hadoop_tmp
 
+sudo chown -R pi:pi /opt/kafka
+sudo chown -R pi:pi /opt/kafka_data
+sudo chown -R pi:pi /opt/zookeeper
+sudo chown -R pi:pi /opt/zookeeper_data
+
 sudo htpdate -a -l www.pool.ntp.org
 
 sudo chown -R pi:pi /usr/src/
 sudo chown -R pi:pi /usr/share/
 sudo chown -R pi:pi /usr/local/
 sudo chown -R pi:pi /home/pi/
+
+sudo chown -R pi:pi /var/log
 
 
 echo '# HADOOP - SPARK - HIVE variables' >> ~/.bashrc
