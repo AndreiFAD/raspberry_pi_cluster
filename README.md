@@ -12,13 +12,13 @@ gigabit switch<br>
 5 Micro sd card (I used 64 GB SanDisk ultra)<br>
 Raspberry Pi cluster case with coolers
 
-1. Install OS:<br>
+## Install OS:<br>
 Raspberry Pi Imager (link) install the last version Debian Buster for host<br>
 (Raspberry Pi OS Legacy with desktop)<br>
 
 Download Ubuntu Server 18.04 LTS for the Raspberry Pi 4 (ARM 64-bit) (link) install for cluster nodes
 
-2. Setup the cluster host:<br>
+## Setup the cluster host:<br>
 Setup wifi and enable ssh before insert sd card to raspberry pi.
 
 Create empty file on /boot partition "ssh"
@@ -68,7 +68,7 @@ $ sudo bash bridge.sh<br>
 Step 3: Reboot.<br>
 $ sudo reboot
 
-3. Setup the cluster nodes:<br>
+## Setup the cluster nodes:<br>
 I made a script to set up the network for master and for workers. the different is only the variables in the top and master wlan0 is configured as well<br>
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/master_node_preparation.sh
 
@@ -122,6 +122,8 @@ cat ~/.ssh/id_rsa.pub | ssh worker3 'cat >> .ssh/authorized_keys'
 
 You should do this process in each cluster node. In the end, all nodes will have all public keys in their lists. This is important — not having the key would prevent machine-to-machine communication after.
 
+## install
+
 This will be installed on every node:
 
 Python3 libraries<br>
@@ -144,9 +146,10 @@ R kernel<br>
 Julia kernel<br>
 Bash kernel<br>
 
-after that you have to reboot all node
+than you have to reboot all node
 
-and run on the master node:<br>
+
+## first run on the master node:<br>
 ```
 cd /opt/hive/bin
 ./schematool -dbType postgres -initSchema
@@ -187,3 +190,6 @@ You can start jupyter with this command <br>
 $ /opt/spark/bin/pyspark –master spark://master:7077“
 
 http://master:8888/lab
+
+
+
