@@ -25,7 +25,7 @@ Create empty file on /boot partition "ssh"
 
 Screenshot 2021-12-15 at 09.05.54.png
 Create file on /boot partition "wpa_supplicant.conf"
-
+```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev <br>
 update_config=1<br>
 country=NL<br>
@@ -33,6 +33,7 @@ network={<br>
   ssid="SSID name"<br>
   psk="wifipass"<br>
 }
+```
 
 Screenshot 2021-12-15 at 09.05.30.png
 After you insert the sd card, you have to set up a few things.
@@ -50,11 +51,13 @@ $ sudo nano /etc/hostname<br>
 clusterhost
 
 sudo nano /etc/hosts<br>
-10.1.2.1 clusterhost<br>
-10.1.2.91 master<br>
-10.1.2.92 worker1<br>
-10.1.2.93 worker2<br>
-10.1.2.94 worker3<br>
+```
+10.1.2.1 clusterhost
+10.1.2.91 master
+10.1.2.92 worker1
+10.1.2.93 worker2
+10.1.2.94 worker3
+```
 
 Then we can set up a separate subnet:
 
@@ -72,20 +75,20 @@ https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/master_nod
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/workers_node_preparation.sh
 
 Don’t forget to change these lines for your setup with both of the scripts:
-
-ipAddress="10.1.2.91"<br>
-hostAddress="master"<br>
-userName="pi"<br>
+```
+ipAddress="10.1.2.91"
+hostAddress="master"
+userName="pi"
 userPass="passwd for pi"
-
+```
 and for master node wlan0 configuration as well:<br>
-
-echo '    wifis:'<br>
-echo '        wlan0:'<br>
-echo '            access-points:'<br>
-echo '                "<SSID>":'<br>
-echo '                    password: "<SSID passwd>"'<br>
-
+```
+echo '    wifis:'
+echo '        wlan0:'
+echo '            access-points:'
+echo '                "<SSID>":'
+echo '                    password: "<SSID passwd>"'
+```
 after you run it, you can give a new password to pi user:<br>
 $ sudo passwd pi
 
@@ -97,7 +100,9 @@ $ chsh -s /bin/bash pi
 If you want to run 'sudo' command without entering a password:<br>
 run: $ sudo visudo<br>
 and add this line:<br>
+```
 pi ALL=(ALL) NOPASSWD: ALL
+```
 
 Generate public/private rsa key pair for user pi in all cluster nodes:<br>
 $ ssh-keygen -t rsa
@@ -107,12 +112,13 @@ Copy the public keys to the authorized keys list:
 $ cat .ssh/id_rsa.pub  >> .ssh/authorized_keys
 
 And copy to all nodes:
-
-$ cat ~/.ssh/id_rsa.pub | ssh clusterhost 'cat >> .ssh/authorized_keys'<br>
-$ cat ~/.ssh/id_rsa.pub | ssh master 'cat >> .ssh/authorized_keys'<br>
-$ cat ~/.ssh/id_rsa.pub | ssh worker1 'cat >> .ssh/authorized_keys'<br>
-$ cat ~/.ssh/id_rsa.pub | ssh worker2 'cat >> .ssh/authorized_keys'<br>
-$ cat ~/.ssh/id_rsa.pub | ssh worker3 'cat >> .ssh/authorized_keys'<br>
+```
+$ cat ~/.ssh/id_rsa.pub | ssh clusterhost 'cat >> .ssh/authorized_keys'
+$ cat ~/.ssh/id_rsa.pub | ssh master 'cat >> .ssh/authorized_keys'
+$ cat ~/.ssh/id_rsa.pub | ssh worker1 'cat >> .ssh/authorized_keys'
+$ cat ~/.ssh/id_rsa.pub | ssh worker2 'cat >> .ssh/authorized_keys'
+$ cat ~/.ssh/id_rsa.pub | ssh worker3 'cat >> .ssh/authorized_keys'
+```
 
 You should do this process in each cluster node. In the end, all nodes will have all public keys in their lists. This is important — not having the key would prevent machine-to-machine communication after.
 
@@ -141,28 +147,30 @@ Bash kernel<br>
 after that you have to reboot all node
 
 and run on the master node:<br>
-$ cd /opt/hive/bin<br>
-$ ./schematool -dbType postgres -initSchema<br>
+```
+$ cd /opt/hive/bin
+$ ./schematool -dbType postgres -initSchema
 
 
 $ hdfs namenode -format -force
 
-$ start-dfs.sh<br>
+$ start-dfs.sh
 $ start-yarn.sh
 
-$ cd /opt/spark <br>
+$ cd /opt/spark
 $ ./sbin/start-all.sh
 
 $ hdfs dfsadmin -safemode leave
 
-$ hdfs dfs -mkdir -p /user/hive/warehouse<br>
-$ hdfs dfs -chmod g+w /user/hive/warehouse<br>
-$ hdfs dfs -mkdir -p /tmp<br>
-$ hdfs dfs -chmod g+w /tmp<br>
-$ hdfs dfs -chmod -R 755 /tmp<br>
+$ hdfs dfs -mkdir -p /user/hive/warehouse
+$ hdfs dfs -chmod g+w /user/hive/warehouse
+$ hdfs dfs -mkdir -p /tmp
+$ hdfs dfs -chmod g+w /tmp
+$ hdfs dfs -chmod -R 755 /tmp
 
-$ /opt/hive/bin/hive –service metastore > /dev/null 2>&1 &<br>
+$ /opt/hive/bin/hive –service metastore > /dev/null 2>&1 &
 $ /opt/hive/bin/hive –service hiveserver2 > /dev/null 2>&1 &
+```
 
 http://master:8088/<br>
 http://master:9870/<br>
