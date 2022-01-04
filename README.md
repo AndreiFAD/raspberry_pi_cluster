@@ -26,12 +26,12 @@ Create empty file on /boot partition "ssh"
 Screenshot 2021-12-15 at 09.05.54.png
 Create file on /boot partition "wpa_supplicant.conf"
 ```
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev <br>
-update_config=1<br>
-country=NL<br>
-network={<br>
-  ssid="SSID name"<br>
-  psk="wifipass"<br>
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=NL
+network={
+  ssid="SSID name"
+  psk="wifipass"
 }
 ```
 
