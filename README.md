@@ -113,11 +113,11 @@ $ cat .ssh/id_rsa.pub  >> .ssh/authorized_keys
 
 And copy to all nodes:
 ```
-$ cat ~/.ssh/id_rsa.pub | ssh clusterhost 'cat >> .ssh/authorized_keys'
-$ cat ~/.ssh/id_rsa.pub | ssh master 'cat >> .ssh/authorized_keys'
-$ cat ~/.ssh/id_rsa.pub | ssh worker1 'cat >> .ssh/authorized_keys'
-$ cat ~/.ssh/id_rsa.pub | ssh worker2 'cat >> .ssh/authorized_keys'
-$ cat ~/.ssh/id_rsa.pub | ssh worker3 'cat >> .ssh/authorized_keys'
+cat ~/.ssh/id_rsa.pub | ssh clusterhost 'cat >> .ssh/authorized_keys'
+cat ~/.ssh/id_rsa.pub | ssh master 'cat >> .ssh/authorized_keys'
+cat ~/.ssh/id_rsa.pub | ssh worker1 'cat >> .ssh/authorized_keys'
+cat ~/.ssh/id_rsa.pub | ssh worker2 'cat >> .ssh/authorized_keys'
+cat ~/.ssh/id_rsa.pub | ssh worker3 'cat >> .ssh/authorized_keys'
 ```
 
 You should do this process in each cluster node. In the end, all nodes will have all public keys in their lists. This is important — not having the key would prevent machine-to-machine communication after.
@@ -148,28 +148,28 @@ after that you have to reboot all node
 
 and run on the master node:<br>
 ```
-$ cd /opt/hive/bin
-$ ./schematool -dbType postgres -initSchema
+cd /opt/hive/bin
+./schematool -dbType postgres -initSchema
 
 
-$ hdfs namenode -format -force
+hdfs namenode -format -force
 
-$ start-dfs.sh
-$ start-yarn.sh
+start-dfs.sh
+start-yarn.sh
 
-$ cd /opt/spark
-$ ./sbin/start-all.sh
+cd /opt/spark
+./sbin/start-all.sh
 
-$ hdfs dfsadmin -safemode leave
+hdfs dfsadmin -safemode leave
 
-$ hdfs dfs -mkdir -p /user/hive/warehouse
-$ hdfs dfs -chmod g+w /user/hive/warehouse
-$ hdfs dfs -mkdir -p /tmp
-$ hdfs dfs -chmod g+w /tmp
-$ hdfs dfs -chmod -R 755 /tmp
+hdfs dfs -mkdir -p /user/hive/warehouse
+hdfs dfs -chmod g+w /user/hive/warehouse
+hdfs dfs -mkdir -p /tmp
+hdfs dfs -chmod g+w /tmp
+hdfs dfs -chmod -R 755 /tmp
 
-$ /opt/hive/bin/hive –service metastore > /dev/null 2>&1 &
-$ /opt/hive/bin/hive –service hiveserver2 > /dev/null 2>&1 &
+/opt/hive/bin/hive –service metastore > /dev/null 2>&1 &
+/opt/hive/bin/hive –service hiveserver2 > /dev/null 2>&1 &
 ```
 
 http://master:8088/<br>
