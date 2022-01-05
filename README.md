@@ -1,30 +1,31 @@
 # raspberry_pi_cluster
 raspberry_pi_cluster<br>
-The main goal was to create a mini analysis lab for learning something new and practicing on one cluster from everywhere and I wrote a script for easier reinstall anytime.
+My goal was to build my own mini analysis lab to practice and learn something new things. An environment what I can reach remotely with every device (with RealVNC) and of course a script with which I can be rebuilt quickly at any time.
+
+I have learned a lot from the descriptions and solutions of others, you will find these links in the references as well!
 
 
-Prerequisites<br>
-5 Raspberry Pi 4 (4x4gb ram 1x8gb ram)<br>
-USB power adapter<br>
-gigabit switch<br>
-5 USB-C cable<br>
-5 UTP cable<br>
-5 Micro sd card (I used 64 GB SanDisk ultra)<br>
-Raspberry Pi cluster case with coolers
+## Prerequisites
+5 Raspberry Pi 4 Model B (4x4gb ram 1x8gb ram) (link)<br>
+USB power adapter, 6 port Charger 60W (link)<br>
+Gigabit switch (D-Link Ethernet Switch, 5 Port) (link)<br>
+5 USB-C cable (USB 3.1, 0.25 m) (link)<br>
+5 Cat6 0.25m Gigabit Ethernet cable (link)<br>
+5 Micro SD card (I used 5x SanDisk MicroSDXC Extreme 64GB) (link)<br>
+Raspberry Pi cluster case with cooling fan and heatsink (link)
 
 ## Install OS:<br>
-Raspberry Pi Imager (link) install the last version Debian Buster for host<br>
-(Raspberry Pi OS Legacy with desktop)<br>
+Raspberry Pi Imager (link) install the last version of Debian Buster for host
+(Raspberry Pi OS Legacy with desktop)
 
-Download Ubuntu Server 18.04 LTS for the Raspberry Pi 4 (ARM 64-bit) (link) install for cluster nodes
+Download Ubuntu Server 18.04 LTS for the Raspberry Pi 4 (ARM 64-bit) (link) image for cluster nodes
+
 
 ## Setup the cluster host:<br>
-Setup wifi and enable ssh before insert sd card to raspberry pi.
+Setup wifi and enable ssh before insert sd card into raspberry pi.
 
-Create empty file on /boot partition "ssh"
-
-Screenshot 2021-12-15 at 09.05.54.png
-Create file on /boot partition "wpa_supplicant.conf"
+Create empty file on /boot partition “ssh”
+Create file on /boot partition “wpa_supplicant.conf”
 ```
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -34,8 +35,6 @@ network={
   psk="wifipass"
 }
 ```
-
-Screenshot 2021-12-15 at 09.05.30.png
 After you insert the sd card, you have to set up a few things.
 
 $ sudo raspi-config
@@ -62,19 +61,22 @@ sudo nano /etc/hosts<br>
 Then we can set up a separate subnet:
 
 Step 1: create a file – sudo nano bridge.sh<br>
-copy this script to the file https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/clusterhost_network_setup.sh<br>
+copy this script to the file or download it:<br> https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/clusterhost_network_setup.sh<br>
 Step 2: Execute the script on your Pi like so.<br>
 $ sudo bash bridge.sh<br>
 Step 3: Reboot.<br>
 $ sudo reboot
 
-## Setup the cluster nodes:<br>
-I made a script to set up the network for master and for workers. the different is only the variables in the top and master wlan0 is configured as well<br>
+
+
+## Preparation of nodes (network, user, authorized keys):<br>
+I made a script to set up the network for master and for workers. the different is only the variables in the top and master wlan0 is configured as well
+
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/master_node_preparation.sh
 
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/workers_node_preparation.sh
 
-Don’t forget to change these lines for your setup with both of the scripts:
+Don’t forget to change these lines for your setup with both of the scripts:<br>
 ```
 ipAddress="10.1.2.91"
 hostAddress="master"
@@ -89,7 +91,7 @@ echo '            access-points:'
 echo '                "<SSID>":'
 echo '                    password: "<SSID passwd>"'
 ```
-after you run it, you can give a new password to pi user:<br>
+After you run it, you can give a new password to pi user:<br>
 $ sudo passwd pi
 
 To change your shell use the chsh command<br>
@@ -97,7 +99,7 @@ $ sudo su pi<br>
 $ chsh -s /bin/bash pi
 
 
-If you want to run 'sudo' command without entering a password:<br>
+If you want to run ‘sudo’ command without entering a password:<br>
 run: $ sudo visudo<br>
 and add this line:<br>
 ```
@@ -122,7 +124,7 @@ cat ~/.ssh/id_rsa.pub | ssh worker3 'cat >> .ssh/authorized_keys'
 
 You should do this process in each cluster node. In the end, all nodes will have all public keys in their lists. This is important — not having the key would prevent machine-to-machine communication after.
 
-## install
+## Install script for all node
 
 This will be installed on every node:
 
@@ -135,7 +137,7 @@ Zookeeper-3.6.3<br>
 Kafka-2.13<br>
 Apache-hive-3.1.2
 
-This will be installed on the "master" node:
+This will be installed only on the "master" node:
 
 Postgresql 10<br>
 jupyter kernels:<br>
@@ -146,50 +148,66 @@ R kernel<br>
 Julia kernel<br>
 Bash kernel<br>
 
-than you have to reboot all node
+You should run this script in each cluster node, the worker node 30-40 min/node, master 3-3,5h, but it depends on your network.
+
+https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/install_script.sh<br>
+It’s important, if you are using different host names, you have to change it here as well!
+
+If you are done with all node you have to reboot them.
 
 
-## first run on the master node:<br>
+## First run on the master node:<br>
 ```
+### Initiating the Hive metastore database schema:
 cd /opt/hive/bin
 ./schematool -dbType postgres -initSchema
 
-
+### it is necessary to format the data space and starting the cluster:
 hdfs namenode -format -force
 
+### start services Hadoop and Spark:
 start-dfs.sh
 start-yarn.sh
 
 cd /opt/spark
 ./sbin/start-all.sh
 
+### I also disabled the safe mode. To do this, after finishing the installation run:
 hdfs dfsadmin -safemode leave
 
+### Create Hive data warehouse on Hadoop filesystem:
 hdfs dfs -mkdir -p /user/hive/warehouse
 hdfs dfs -chmod g+w /user/hive/warehouse
 hdfs dfs -mkdir -p /tmp
 hdfs dfs -chmod g+w /tmp
 hdfs dfs -chmod -R 755 /tmp
 
+### You should start first the hive-metastore:
 /opt/hive/bin/hive –service metastore > /dev/null 2>&1 &
+### After initializing the hive-metastore, you should start the hiveserver2:
 /opt/hive/bin/hive –service hiveserver2 > /dev/null 2>&1 &
+
 ```
 
+Hadoop Datanode Information<br>
 http://master:8088/<br>
+Hadoop Cluster Information<br>
 http://master:9870/<br>
+Spark Information<br>
 http://master:8080/<br>
+Hive Information<br>
 http://master:10002/<br>
 
-go to folder – cd notebooks
+go to folder –> $ cd notebooks<br>
 
-
+Add password for jupyter, then you don’t have to use token:<br>
 $ jupyter notebook password
-  
-  
-You can start jupyter with this command <br> 
-$ /opt/spark/bin/pyspark –master spark://master:7077“
 
-http://master:8888/lab
+You can start jupyter with this command:<br>
+$ /opt/spark/bin/pyspark –master spark://master:7077“<br>
 
+http://master:8888/lab<br>
 
+Next time you can use this start script (with Zookeeper and Kafka service as well)<br>
+https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/cluster_start.sh
 
