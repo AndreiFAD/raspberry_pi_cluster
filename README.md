@@ -1,5 +1,4 @@
-# raspberry_pi_cluster
-raspberry_pi_cluster<br>
+# Raspberry Pi Cluster Analysis Lab<br>
 My goal was to build my own mini analysis lab to practice and learn something new things. An environment what I can reach remotely with every device (with RealVNC) and of course a script with which I can be rebuilt quickly at any time.
 
 I have learned a lot from the descriptions and solutions of others, you will find these links in the references as well!
