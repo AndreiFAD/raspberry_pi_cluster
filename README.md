@@ -1,7 +1,7 @@
 # Analysis Lab on Raspberry Pi Cluster<br>
-My main goal was to build my own mini analysis lab to practice and learn something new. An environment what I can reach remotely with every device (with RealVNC) and of course a script with which I can be rebuilt quickly at any time.
+My main goal was to build my own mini analysis lab to practice and learn something new. An environment that I can use remotely with every device (with RealVNC) and of course a script with which I can be rebuilt quickly at any time.
 
-I have learned a lot from the descriptions and solutions of others, you will find these links in the references as well!
+I have learned a lot from the descriptions and solutions of others, you will find these links in the references as well.
 
 
 ## Prerequisites
@@ -69,7 +69,7 @@ $ sudo reboot
 
 
 ## Preparation of nodes (network, user, authorized keys):<br>
-I made a script to set up the network for master and for workers. the different is only the variables in the top and master wlan0 is configured as well
+I made a script to set up the network for master and for workers. The differences are only the variables in the top and at script of master node the wlan0 is also configured.
 
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/master_node_preparation.sh
 
@@ -147,12 +147,12 @@ R kernel<br>
 Julia kernel<br>
 Bash kernel<br>
 
-You should run this script in each cluster node, the worker node 30-40 min/node, master 3-3,5h, but it depends on your network.
+You should run this script on each cluster node, the worker node will run for 30-40 min/node, master 3-3,5h, but it depends on your network.
 
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/install_script.sh<br>
-It’s important, if you are using different host names, you have to change it here as well!
+It's important, if you are using different host names, you have to change it here as well.
 
-If you are done with all node you have to reboot them.
+If you are done with all the nodes you have to reboot them.
 
 
 ## First run on the master node:<br>
@@ -161,7 +161,7 @@ If you are done with all node you have to reboot them.
 cd /opt/hive/bin
 ./schematool -dbType postgres -initSchema
 
-### it is necessary to format the data space and starting the cluster:
+### it is necessary to format the data space and start the cluster:
 hdfs namenode -format -force
 
 ### start services Hadoop and Spark:
@@ -171,7 +171,7 @@ start-yarn.sh
 cd /opt/spark
 ./sbin/start-all.sh
 
-### I also disabled the safe mode. To do this, after finishing the installation run:
+### I also disabled the safe mode:
 hdfs dfsadmin -safemode leave
 
 ### Create Hive data warehouse on Hadoop filesystem:
@@ -181,7 +181,7 @@ hdfs dfs -mkdir -p /tmp
 hdfs dfs -chmod g+w /tmp
 hdfs dfs -chmod -R 755 /tmp
 
-### You should start first the hive-metastore:
+### You should start the hive-metastore first:
 /opt/hive/bin/hive –service metastore > /dev/null 2>&1 &
 ### After initializing the hive-metastore, you should start the hiveserver2:
 /opt/hive/bin/hive –service hiveserver2 > /dev/null 2>&1 &
@@ -207,7 +207,7 @@ $ /opt/spark/bin/pyspark –master spark://master:7077“<br>
 
 http://master:8888/lab<br>
 
-Next time you can use this start script (with Zookeeper and Kafka service as well)<br>
+Next time you can use this start script (Zookeeper and Kafka service start commands are included)<br>
 https://raw.githubusercontent.com/AndreiFAD/raspberry_pi_cluster/main/cluster_start.sh
 
 
