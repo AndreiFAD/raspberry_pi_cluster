@@ -1,5 +1,7 @@
 # Analysis Lab on Raspberry Pi Cluster<br>
-My main goal was to build my own mini analysis lab to practice and learn something new. An environment that I can use remotely with any device (with RealVNC) and of course a script with which I can be rebuilt quickly at any time.
+I built my own mini analysis lab to practice and learn something new. An environment that I can use remotely with any device (with RealVNC) and of course an install script to rebuild it quickly anytime.
+
+I hope, it will be useful for others, who want to make their own.
 
 I have learned a lot from the descriptions and solutions of others, you will find these links in the references as well.
 
